@@ -30,7 +30,7 @@ var CookieJar = exports = module.exports = function CookieJar() {
 CookieJar.prototype.add = function(cookie){
   this.cookies = this.cookies.filter(function(c){
     // Avoid duplication (same path, same name)
-    return !(c.name == cookie.name && c.path == cookie.path);
+    return !(c.name == cookie.name && c.path == cookie.path && c.domain == cookie.domain);
   });
   this.cookies.push(cookie);
 };
