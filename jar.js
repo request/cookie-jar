@@ -48,7 +48,7 @@ CookieJar.prototype.get = function(req){
     , now = new Date
     , specificity = {};
   return this.cookies.filter(function(cookie){
-    if (0 == path.indexOf(cookie.path) && now < cookie.expires
+    if (0 == path.indexOf(cookie.path) && (!cookie.expires || now < cookie.expires)
       && cookie.path.length > (specificity[cookie.name] || 0))
       return specificity[cookie.name] = cookie.path.length;
   });
