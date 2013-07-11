@@ -83,6 +83,26 @@ function expires(ms) {
   var cookies = jar.get({ url: 'http://foo.com/' });
   assert.equal(cookies.length, 1);
   assert.equal(cookies[0], e);
+
+  // .get with domain
+  var jar = new Jar;
+  var a = new Cookie('sid=1234; path=/; domain=localhost');
+  var b = new Cookie('sid=1111; path=/foo/bar; domain=example.com');
+  var c = new Cookie('sid=2222; path=/baz; domain=www.site.com');
+  jar.add(a);
+  jar.add(b);
+  jar.add(c);
+
+  var cookie = jar.get({url: 'http://localhost:8000/foo'})
+  assert.equal(cookie.length, 1);
+  assert.equal(cookie[0], a);
+
+  var cookie = jar.get({url: 'http://www.example.com/foo/bar/baz'})
+  assert.equal(cookie.length, 1);
+  assert.equal(cookie[0], b);
+
+  var cookie = jar.get({url: 'http://site.com/baz'})
+  assert.equal(cookie.length, 0);
 })();
 
 setTimeout(function() {

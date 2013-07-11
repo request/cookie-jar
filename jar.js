@@ -44,13 +44,21 @@ CookieJar.prototype.add = function(cookie){
 */
 
 CookieJar.prototype.get = function(req){
-  var path = url.parse(req.url).pathname
+  var parsedUrl = url.parse(req.url)
+    , path = parsedUrl.pathname
+    , host = parsedUrl.hostname
     , now = new Date
     , specificity = {};
   return this.cookies.filter(function(cookie){
-    if (0 == path.indexOf(cookie.path) && now < cookie.expires
-      && cookie.path.length > (specificity[cookie.name] || 0))
-      return specificity[cookie.name] = cookie.path.length;
+    if (0 == path.indexOf(cookie.path) && now < cookie.expires &&
+        cookie.path.length > (specificity[cookie.name] || 0))
+    {
+      if (cookie.domain) {
+        if (host.indexOf(cookie.domain) !== -1 && (host.length - cookie.domain.length) == host.indexOf(cookie.domain)) {
+          return specificity[cookie.name] = cookie.path.length;
+        } else return false
+      } else return specificity[cookie.name] = cookie.path.length;
+    }
   });
 };
 
